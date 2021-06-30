@@ -1,6 +1,6 @@
 # ChatBootWhatApp
-Integrantes: <br>
--Espinales Cedeño Wendy Jaritza <br>
--Fernández Intriago Karla Denisse <br>
--Macías Mera Natalia Anahi <br>
--Mendoza Anchundia Jarod Dennis
+**Integrantes:**
+- Espinales Cedeño Wendy Jaritza 
+- Fernández Intriago Karla Denisse 
+- Macías Mera Natalia Anahi 
+- Mendoza Anchundia Jarod Dennis
