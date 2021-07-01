@@ -171,6 +171,7 @@ const withSession = () => {
   client.initialize();
   }
   
+
   /**
   * Generamos un QRCODE para iniciar sesion
   */
