@@ -153,7 +153,7 @@ const WhithSession = () => {
   
   });
 
-  client.initialize()
+  client.initialize();
 }
 
 //from= numero  // to: a quien  //body: cuerpo del mensaje
