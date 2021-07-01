@@ -1,0 +1,27 @@
+[
+    {
+        "Nombre": "Carlos",
+        "Apellido": "Acosta",
+        "Especialidad": "Entrenador Fitness"
+    },
+    {
+        "Nombre": "Victor",
+        "Apellido": "Mendoza",
+        "Especialidad": "Entrenador Muscular y pilates"
+    },
+    {
+        "Nombre": "Jared",
+        "Apellido": "Espinoza",
+        "Especialidad": "Entrenador de Tonificación"
+    },
+    {
+        "Nombre": "Martha",
+        "Apellido": "Fernández",
+        "Especialidad": "Entrenador de Actividades variadas"
+    },
+    {
+        "Nombre": "Vielka",
+        "Apellido": "Peréz",
+        "Especialidad": "Entrenador Reto baja talla"
+    }
+]
