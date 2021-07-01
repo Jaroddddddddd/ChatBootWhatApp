@@ -1,4 +1,4 @@
-const { PlanesdeGimnasio } = require('../model')
+const { PlanesdeGimnasio } = require('../model');
 
 function insertPlan(req, res){
   const {body} = req
