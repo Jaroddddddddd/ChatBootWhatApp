@@ -7,5 +7,4 @@ function insertEntrenador(req, res){
 }
 
 
-
 module.exports = insertEntrenador
