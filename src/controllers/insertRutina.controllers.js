@@ -7,5 +7,4 @@ function insertRutina(req, res){
 }
 
 
-
 module.exports = insertRutina
