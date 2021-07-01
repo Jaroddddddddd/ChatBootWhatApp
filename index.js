@@ -6,12 +6,12 @@ const {Client} = require('whatsapp-web.js')
 const config = require('./src/config');
 const axios = require('axios').default;
 
+
 const app = express();
 
 // Nos muestra la ruta del archivo de sesion 
 const SESSION_FILE_PATH = './session.json';
 
-let sessionData;
 
 const insertrouEntre = require('./src/routes/insertEntrenador.routes');
 const insertrouPlan = require('./src/routes/insertPlan.routes');
@@ -43,7 +43,12 @@ app.use(Planrouter);
 app.use(Rutinarouter);
 
 
-
+/*
+  La estructura del parámetro (msg) es la siguiente
+  from > desde donde se envia
+  to > a quien
+  body > mensaje
+*/
 
 const escucharmensaje = () => {
   client.on('message', (mensajes)=>{
@@ -51,13 +56,14 @@ const escucharmensaje = () => {
     let mensajebot =  [
       "Planes",
       "Rutina",
-      "coach",
+      "Entrenador",
       "Opciones",
       "Registro",
       "Ubicación",
       "Salir",
       "Gracias"
-  ]       
+  ]
+
   if(mensajebot.includes(body)){
       switch (body){
 
@@ -90,7 +96,7 @@ const escucharmensaje = () => {
               break;
 
             
-          case 'Coach':
+          case 'Entrenador':
             let entrena = [];
             axios.get('http://localhost:3546/api/entrenador')
             .then(datos => {
@@ -105,7 +111,7 @@ const escucharmensaje = () => {
             break;
 
               case 'Opciones':
-              sendMessage(from, 'Te mostraremos las siguientes opciones del Total Gym🔥: \n\n🟡Planes \n\n🔵Rutina \n\n 🔴Entrenador  \n\n🔵Registro \n\n🔴Ubicación \n\n🟡Help \n\n🔵Salir \n\n');
+              sendMessage(from, 'Te mostraremos las siguientes opciones del Total Gym🔥: \n\n🟡Planes \n\n🔵Rutina \n\n 🔴Entrenador  \n\n🔵Registro \n\n🔴Ubicación \n\n🔵Salir \n\n');
               break;
 
               case 'Registro':
@@ -132,73 +138,73 @@ const escucharmensaje = () => {
 })
 }
 
-// Funcion cuando la session ya este inciciada
-const WhithSession = () => {
-  console.log('Su sesion esta siendo validada WhatsApp.')
-  sessionData = require(SESSION_FILE_PATH) // almacenar el archivo que contiene la sessión
+const sendMessage = (to,message) => {
+  client.sendMessage( to, message)
+}
 
+const withSession = () => {
+  // Si exsite cargamos el archivo con las credenciales
+  console.log('Validando la sesión con con Whatsapp...');
+  sessionData = require(SESSION_FILE_PATH);
   client = new Client({
     session: sessionData
-  })
-
+  });
   client.on('ready', () => {
-    console.log('El cliente se  encuentra conectado correctamente');
+    console.log('El cliente se encuentra conectado correctamnete!');
     escucharmensaje();
-    //sendMessage();
-  });
-
-  // Si existe algún error de autenticación o se cerró la sesión
-  client.on('auth_failure', () => {
-    console.log('Error de autenticación, vuelva a inicar sesión')
-  
-  });
-
-  client.initialize();
-}
-
-//from= numero  // to: a quien  //body: cuerpo del mensaje
-const sendMessage = (to, message) => {
-  Client.sendMessage(to, message)
-}
-
-
-// Si aún no tenemos ninguna sesión iniciad, se procedera a generar el qr
-const WhithOutSession = () => {
-  console.log('No hay una sesión guardada');
-  client = new Client();
-
-  client.on('qr', (qr) => {
-    qrcode.generate(qr, { small: true });
-  });
-
-  client.on('ready', () => {
-    console.log('El cliente se encuentra en uso !!!');
-    escucharmensaje();
+    // sendMessage();
     // connectionReady();
   });
-
-  client.on('authenticated', (session) => {
-    // Guardamos las credenciales de sesion para usarlas luego
-    sessionData = session
-    fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), (err) => {
-      if (err) {
-        console.log(err)
-      }
-    })
-  })
-
-// Incializamos el cliente
-    client.initialize()
-
-    console.log('Cliente inicializado correctamente')
-}
-
-
-
-
+  client.on('auth_failure', () => {
+    spinner.stop();
+    console.log('Error de autentificacion debes voler a generar el codigo, intentar nuevamnete' );
+    client = new Client();
+    client.on('qr', qr => {
+        qrcode.generate(qr, { small: true });
+    });
   
+    client.on('ready', () => {
+        console.log('El cliente se encuentra conectado correctamnete!');
+ 
+    });
+  })
+  client.initialize();
+  }
+  
+  /**
+  * Generamos un QRCODE para iniciar sesion
+  */
+  const withOutSession = () => {
+  
+  console.log('No tenemos session guardada');
+  client = new Client();
+  client.on('qr', qr => {
+    qrcode.generate(qr, { small: true });
+  });
+  
+  client.on('ready', () => {
+    console.log('Ya puede iniciar sesion  por que el cliente se encuentra conectado correctamnete! !!!');
+    escucharmensaje();
 
-
-// Comprobar si existe una sesión guardada
-(fs.existsSync(SESSION_FILE_PATH)) ? WhithSession() : WhithOutSession();
-
+  });
+  
+  client.on('auth_failure', () => {
+    console.log('Error de autentificación, por favor vuelva a conectarse ')
+  })
+  
+  client.on('authenticated', (session) => {
+    // Guardamos credenciales de de session para usar luego
+    sessionData = session;
+    fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+  });
+  
+  client.initialize();
+  }
+  
+//verificamos si existe este archivo en las credenciales
+  (fs.existsSync(SESSION_FILE_PATH)) ? withSession() : withOutSession();
+  
