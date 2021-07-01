@@ -6,4 +6,5 @@ const { PlanesdeGimnasio } = require('../model')
 
 }
 
+
 module.exports = mostrarPlan
