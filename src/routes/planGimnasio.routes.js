@@ -5,4 +5,3 @@ const Planrouter = express.Router()
 Planrouter.get('/api/plangimnasio', mostrarPlan)
 
 module.exports = Planrouter
-
